@@ -3,7 +3,7 @@ name: Sync Fork with Upstream
 on:
   # 定时触发：每天 UTC 0 点执行
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 */30 * *'
   # 手动触发：在 Actions 页面点击按钮运行
   workflow_dispatch:
 
