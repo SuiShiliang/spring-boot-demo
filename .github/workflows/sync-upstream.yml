@@ -1,0 +1,36 @@
+name: Sync Fork with Upstream
+
+on:
+  # 定时触发：每天 UTC 0 点执行
+  schedule:
+    - cron: '0 0 * * *'
+  # 手动触发：在 Actions 页面点击按钮运行
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：检出当前仓库代码
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 步骤2：配置 Git 用户信息（用于提交记录）
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      # 步骤3：添加上游仓库地址并拉取更新
+      - name: Fetch and Merge Upstream
+        run: |
+          # 添加上游远程仓库（如果已存在会报错，但忽略即可）
+          git remote add upstream https://github.com/xkcoding/spring-boot-demo.git || true
+          # 拉取上游最新代码
+          git fetch upstream
+          # 切换到你的默认分支（通常是 main 或 master）
+          git checkout main
+          # 合并上游分支（使用 merge 策略，保留提交历史）
+          git merge upstream/main
+          # 推送到你的 Fork 仓库
+          git push origin main
